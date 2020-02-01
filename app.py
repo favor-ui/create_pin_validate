@@ -32,7 +32,10 @@ class Register(db.Model):
         return '<pin {}>'.format(self.pin)
 
 def create_rand(x):
-    """ A function to generate random 15 digit number. where n is the number of Digits"""
+
+    """ A function for generating a 15digit number using the random mudule.
+    x is the number of digits reqired"""
+    
     lower = 10**(x-1)
     upper = 10**x - 1
     return random.randint(lower, upper)
@@ -42,21 +45,18 @@ def create_rand(x):
 @app.route('/pin', methods=['GET'])
 def index():
     """
-    This is the end point for a resource that generates random 15digit pin and serial number when the
-    resource is requested.
-    it generates 15digits random pin, and verifies that pin does not already exists in the database
-    before returning it to the client in JSON format.
-    random_digit function is created with random function.
-    :return: pin, serial
+    the endpoint for a resource that generates
+    a unique 15digit pin and 3digit serial number on request.
     """
-    # implemnting while loop to ensure that the random generated pin doesn't already exist in the database
+    
+    """loop to ensure that created pin doesn't exist in database for easy validation"""
     counter = 1
     while counter >= 1:
         pin = create_rand(15)
         sn = random.randrange(100,999)
         pin1 = Register.query.filter_by(pin=str(pin)).all()
         sn1 = Register.query.filter_by(sn=int(sn)).all()
-        
+                
         if pin1 or sn1:
             print('again')
             counter = counter + 1
@@ -74,8 +74,8 @@ def index():
 @app.route('/<string:pin>', methods=['GET'])
 def check_sn(pin):
     """
-    This endpoint verifies that the pin entered matches with what is in the database.
-    if it exists, return 'valid' else, returns 'Invalid
+    This endpoint validates the pin entered with the one in the database.
+    to return valid or invalid as response
     """
     pin = Register.query.filter_by(pin=pin).all()
     if pin:
