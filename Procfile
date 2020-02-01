@@ -1,0 +1,1 @@
+web: flask update; guinicorn app:app
