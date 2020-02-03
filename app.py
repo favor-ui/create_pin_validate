@@ -31,9 +31,9 @@ class Register(db.Model):
     def __repr__(self):
         return '<pin {}>'.format(self.pin)
 
-def create_rand(x):
+def create_pin(x):
 
-    """ A function for generating a 15digit number using the random mudule.
+    """ This function generates a 15digit pin using the random mudule.
     x is the number of digits reqired"""
     
     lower = 10**(x-1)
@@ -52,7 +52,7 @@ def index():
     """loop to ensure that created pin doesn't exist in database for easy validation"""
     counter = 1
     while counter >= 1:
-        pin = create_rand(15)
+        pin = create_pin(15)
         sn = random.randrange(100,999)
         pin1 = Register.query.filter_by(pin=str(pin)).all()
         sn1 = Register.query.filter_by(sn=int(sn)).all()
@@ -72,15 +72,15 @@ def index():
     return jsonify({'serial number': serial_number, 'PIN': pin1})
 
 @app.route('/<string:pin>', methods=['GET'])
-def check_sn(pin):
+def validates(pin):
     """
-    This endpoint validates the pin entered with the one in the database.
-    to return valid or invalid as response
+    This endpoint checks to validate or not that the pin
+    requested is same with the  stored one in the database.
     """
     pin = Register.query.filter_by(pin=pin).all()
     if pin:
-        return jsonify({'message': 'Valid PIN'})
-    return jsonify({'message': 'Invalid PIN !!!'})
+        return jsonify({'message': 'This Pin is Valid'})
+    return jsonify({'message': 'This Pin could not be validated!!!'})
 
 
 if __name__ == '__main__':
