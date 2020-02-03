@@ -1,5 +1,6 @@
 from flask import Flask, jsonify
 import random
+import string
 from datetime import datetime
 import os
 from flask_sqlalchemy import SQLAlchemy
@@ -53,7 +54,7 @@ def index():
     counter = 1
     while counter >= 1:
         pin = create_pin(15)
-        sn = random.randrange(100,999)
+        sn = random.randrange(1000000,9999999)
         pin1 = Register.query.filter_by(pin=str(pin)).all()
         sn1 = Register.query.filter_by(sn=int(sn)).all()
                 
